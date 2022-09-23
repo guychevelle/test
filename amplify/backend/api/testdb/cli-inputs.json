@@ -1,18 +1,21 @@
 {
   "version": 1,
   "serviceConfiguration": {
-    "serviceName": "AppSync",
     "apiName": "testdb",
-    "transformSchema": "MODELTEXT",
+    "serviceName": "AppSync",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "us-east-1_3eYX7SYfa"
+      "cognitoUserPoolId": "authtestAuth"
     },
     "conflictResolution": {
       "defaultResolutionStrategy": {
-        "type": "OPTIMISTIC_CONCURRENCY"
+        "type": "AUTOMERGE"
       }
-    }
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "AWS_IAM"
+      }
+    ]
   }
 }
-
