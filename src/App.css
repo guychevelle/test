@@ -1,4 +1,11 @@
 
+.codediv {
+  display: flex;
+  position: relative;
+  height: 200px;
+  width: 300px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
