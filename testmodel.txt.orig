@@ -7,7 +7,23 @@ type Process @model @auth(rules: [
   id: ID!
   name: String!
   description: String
+  picturekey: String
   admingroups: [String]
   readgroups: [String]
 }
 
+type Steps @model @auth(rules: [{allow: owner}, 
+                                {allow: private, operations: [read]}]) {
+  id: ID!
+  stepnum: Int!
+  name: String!
+  description: String
+  steptextkey: String
+  code: Code @hasOne
+}
+
+type Code @model @auth(rules: [{allow: owner}, 
+                               {allow: private, operations: [read]}]) {
+  id: ID!
+  codetextkey: String
+}
