@@ -5,6 +5,17 @@
     "serviceName": "Cognito",
     "userPoolConfiguration": {
       "userPoolName": "RESOURCEpool",
+      "userPoolGroups": [
+        {
+          "groupName": "admins"
+        }
+      ],
+      "adminQueries": {
+        "permissions": {
+          "restrictAccess": true,
+          "groupName": "admins"
+        }
+      },
       "requiredSignupAttributes": ["EMAIL", "NAME"],
       "signinMethod": "USERNAME",
       "passwordPolicy": {

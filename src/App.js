@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
-import { Auth, Hub } from 'aws-amplify';
+import { Amplify, Auth, Hub } from 'aws-amplify';
 import './App.css';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -10,6 +10,9 @@ import { API } from 'aws-amplify';
 import { Storage } from 'aws-amplify';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
+
+//  Cognito Identity Service Provider via @aws-sdk
+import { listUsers } from './listUsers';
 
 function App() {
 
@@ -169,11 +172,26 @@ function App() {
     });
   }
 
+  async function getUsers() {
+    // attempt using an Admin Query to get users
+    const sess = await Auth.currentSession();
+    console.log('sess.accessToken', sess.accessToken);
+
+    const myinit = {
+      headers: {
+        'Content-Type' : 'application/json',
+        Authorization: sess.accessToken.jwtToken
+      }
+    }
+    const result = await API.get("AdminQueries", "/listUsers", myinit);
+    console.log('listUsers result', result);
+  }
+
   //if (!list)
   //  getSteps();
 
-  if (!processdata)
-    getProcesses();
+  //if (!processdata)
+  //  getProcesses();
 
   if (!code)
     getCode();
@@ -181,6 +199,12 @@ function App() {
   //  console.log('code', code);
 
   console.log('this is start of test');
+
+  //const userlist = listUsers('us-east-1_wOVNZywK2');
+  //console.log('userlist', userlist);
+
+  getUsers();
+
 
   return (
     <div className="App">

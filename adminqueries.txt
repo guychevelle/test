@@ -1,0 +1,165 @@
+Air:test david$ amplify add auth
+Using service: Cognito, provided by: awscloudformation
+ 
+ The current configured provider is Amazon Cognito. 
+ 
+ Do you want to use the default authentication and security configuration? Manua
+l configuration
+ Select the authentication/authorization services that you want to use: User Sig
+n-Up & Sign-In only (Best used with a cloud API only)
+ Provide a friendly name for your resource that will be used to label this categ
+ory in the project: testauth
+ Provide a name for your user pool: test_userpool
+ Warning: you will not be able to edit these selections. 
+ How do you want users to be able to sign in? Username
+ Do you want to add User Pool Groups? Yes
+? Provide a name for your user pool group: testuserpoolgroup
+? Do you want to add another User Pool Group No
+✔ Sort the user pool groups in order of preference · testuserpoolgroup
+ Do you want to add an admin queries API? Yes
+? Do you want to restrict access to the admin queries API to a specific Group No
+ Multifactor authentication (MFA) user login options: OFF
+ Email based user registration/forgot password: Enabled (Requires per-user email
+ entry at registration)
+ Specify an email verification subject: Your verification code
+ Specify an email verification message: Your verification code is {####}
+ Do you want to override the default password policy for this User Pool? No
+ Warning: you will not be able to edit these selections. 
+ What attributes are required for signing up? Email, Name
+ Specify the app's refresh token expiration period (in days): 30
+ Do you want to specify the user attributes this app can read and write? No
+ Do you want to enable any of the following capabilities? 
+ Do you want to use an OAuth flow? Yes
+ What domain name prefix do you want to use? test6a4f99ff-6a4f99ff
+ Enter your redirect signin URI: 
+>> The value must be a valid URI with a trailing forward slash. HTTPS must be us
+ed instead of HTTP unless you are using localhost.
+Air:test david$ amplify add auth
+Using service: Cognito, provided by: awscloudformation
+ 
+ The current configured provider is Amazon Cognito. 
+ 
+ Do you want to use the default authentication and security configuration? Manua
+l configuration
+ Select the authentication/authorization services that you want to use: User Sig
+n-Up, Sign-In, connected with AWS IAM controls (Enables per-user Storage feature
+s for images or other content, Analytics, and more)
+ Provide a friendly name for your resource that will be used to label this categ
+ory in the project: testauth
+ Enter a name for your identity pool. testidpool
+ Allow unauthenticated logins? (Provides scoped down permissions that you can co
+ntrol via AWS IAM) Yes
+ Do you want to enable 3rd party authentication providers in your identity pool?
+ No
+ Provide a name for your user pool: test9f2e35ba_userpool_9f2e35ba
+ Warning: you will not be able to edit these selections. 
+ How do you want users to be able to sign in? Username
+ Do you want to add User Pool Groups? No
+ Do you want to add an admin queries API? Yes
+? Do you want to restrict access to the admin queries API to a specific Group No
+ Multifactor authentication (MFA) user login options: OFF
+ Email based user registration/forgot password: Enabled (Requires per-user email
+ entry at registration)
+ Specify an email verification subject: Your verification code
+ Specify an email verification message: Your verification code is {####}
+ Do you want to override the default password policy for this User Pool? No
+ Warning: you will not be able to edit these selections. 
+ What attributes are required for signing up? Email, Name
+ Specify the app's refresh token expiration period (in days): 30
+ Do you want to specify the user attributes this app can read and write? No
+ Do you want to enable any of the following capabilities? 
+ Do you want to use an OAuth flow? No
+? Do you want to configure Lambda Triggers for Cognito? No
+✅ Successfully added auth resource testauth locally
+✅ Some next steps:
+"amplify push" will build all your local backend resources and provision it in the cloud
+"amplify publish" will build all your local backend and frontend resources (if you have hosting category added) and provision it in the cloud
+Air:test david$ amplify push
+⠧ Fetching updates to backend environment: sbxa from the cloud.⠋ Building resour✔ Successfully pulled backend environment sbxa from the cloud.
+    Current Environment: sbxa
+    
+┌──────────┬───────────────┬───────────┬───────────────────┐
+│ Category │ Resource name │ Operation │ Provider plugin   │
+├──────────┼───────────────┼───────────┼───────────────────┤
+│ Auth     │ testauth      │ Create    │ awscloudformation │
+├──────────┼───────────────┼───────────┼───────────────────┤
+│ Storage  │ test          │ No Change │ awscloudformation │
+└──────────┴───────────────┴───────────┴───────────────────┘
+? Are you sure you want to continue? Yes
+⠙ Updating resources in the cloud. This may take a few minutes...
+UPDATE_IN_PROGRESS amplify-test-sbxa-125617       AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:52 GMT-0700 (Pacific Daylight Time) User Initiated
+CREATE_IN_PROGRESS UpdateRolesWithIDPFunctionRole AWS::IAM::Role             Tue Apr 04 2023 13:13:58 GMT-0700 (Pacific Daylight Time)               
+UPDATE_IN_PROGRESS storagetest                    AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:58 GMT-0700 (Pacific Daylight Time)               
+CREATE_IN_PROGRESS authtestauth                   AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:58 GMT-0700 (Pacific Daylight Time)               
+⠹ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UpdateRolesWithIDPFunctionRole AWS::IAM::Role             Tue Apr 04 2023 13:13:58 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+UPDATE_COMPLETE    storagetest                    AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:59 GMT-0700 (Pacific Daylight Time)                            
+⠸ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS authtestauth AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:59 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠏ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS amplify-test-sbxa-125617-authtestauth-U3JYUQIMOCC1 AWS::CloudFormation::Stack Tue Apr 04 2023 13:13:59 GMT-0700 (Pacific Daylight Time) User Initiated
+⠧ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPool AWS::Cognito::UserPool Tue Apr 04 2023 13:14:05 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS UserPool AWS::Cognito::UserPool Tue Apr 04 2023 13:14:07 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    UserPool AWS::Cognito::UserPool Tue Apr 04 2023 13:14:07 GMT-0700 (Pacific Daylight Time)                            
+⠦ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientWeb AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:10 GMT-0700 (Pacific Daylight Time) 
+CREATE_IN_PROGRESS UserPoolClient    AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:10 GMT-0700 (Pacific Daylight Time) 
+⠧ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientWeb AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:12 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    UserPoolClientWeb AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:12 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS UserPoolClient    AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:12 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    UserPoolClient    AWS::Cognito::UserPoolClient Tue Apr 04 2023 13:14:12 GMT-0700 (Pacific Daylight Time)                            
+⠋ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientRole AWS::IAM::Role Tue Apr 04 2023 13:14:15 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS UserPoolClientRole AWS::IAM::Role Tue Apr 04 2023 13:14:16 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠹ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE UpdateRolesWithIDPFunctionRole AWS::IAM::Role Tue Apr 04 2023 13:15:10 GMT-0700 (Pacific Daylight Time) 
+⠦ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE UserPoolClientRole AWS::IAM::Role Tue Apr 04 2023 13:15:27 GMT-0700 (Pacific Daylight Time) 
+⠧ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientLambda AWS::Lambda::Function Tue Apr 04 2023 13:15:31 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS UserPoolClientLambda AWS::Lambda::Function Tue Apr 04 2023 13:15:32 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠙ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE UserPoolClientLambda AWS::Lambda::Function Tue Apr 04 2023 13:15:38 GMT-0700 (Pacific Daylight Time) 
+⠸ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientLambdaPolicy AWS::IAM::Policy Tue Apr 04 2023 13:15:41 GMT-0700 (Pacific Daylight Time) 
+⠋ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientLambdaPolicy AWS::IAM::Policy Tue Apr 04 2023 13:15:42 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠴ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE UserPoolClientLambdaPolicy AWS::IAM::Policy Tue Apr 04 2023 13:16:52 GMT-0700 (Pacific Daylight Time) 
+⠦ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientLogPolicy AWS::IAM::Policy Tue Apr 04 2023 13:16:56 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS UserPoolClientLogPolicy AWS::IAM::Policy Tue Apr 04 2023 13:16:57 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠋ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE UserPoolClientLogPolicy AWS::IAM::Policy Tue Apr 04 2023 13:18:07 GMT-0700 (Pacific Daylight Time) 
+⠇ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientInputs Custom::LambdaCallout Tue Apr 04 2023 13:18:10 GMT-0700 (Pacific Daylight Time) 
+⠇ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UserPoolClientInputs Custom::LambdaCallout Tue Apr 04 2023 13:18:14 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    UserPoolClientInputs Custom::LambdaCallout Tue Apr 04 2023 13:18:14 GMT-0700 (Pacific Daylight Time)                            
+⠏ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS IdentityPool AWS::Cognito::IdentityPool Tue Apr 04 2023 13:18:17 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS IdentityPool AWS::Cognito::IdentityPool Tue Apr 04 2023 13:18:18 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    IdentityPool AWS::Cognito::IdentityPool Tue Apr 04 2023 13:18:19 GMT-0700 (Pacific Daylight Time)                            
+⠙ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS IdentityPoolRoleMap AWS::Cognito::IdentityPoolRoleAttachment Tue Apr 04 2023 13:18:22 GMT-0700 (Pacific Daylight Time)                            
+CREATE_IN_PROGRESS IdentityPoolRoleMap AWS::Cognito::IdentityPoolRoleAttachment Tue Apr 04 2023 13:18:24 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE    IdentityPoolRoleMap AWS::Cognito::IdentityPoolRoleAttachment Tue Apr 04 2023 13:18:24 GMT-0700 (Pacific Daylight Time)                            
+⠴ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE amplify-test-sbxa-125617-authtestauth-U3JYUQIMOCC1 AWS::CloudFormation::Stack Tue Apr 04 2023 13:18:27 GMT-0700 (Pacific Daylight Time) 
+⠏ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE    authtestauth               AWS::CloudFormation::Stack Tue Apr 04 2023 13:18:36 GMT-0700 (Pacific Daylight Time) 
+CREATE_IN_PROGRESS UpdateRolesWithIDPFunction AWS::Lambda::Function      Tue Apr 04 2023 13:18:37 GMT-0700 (Pacific Daylight Time) 
+⠦ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS UpdateRolesWithIDPFunction AWS::Lambda::Function Tue Apr 04 2023 13:18:40 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+⠧ Updating resources in the cloud. This may take a few minutes...
+CREATE_COMPLETE    UpdateRolesWithIDPFunction        AWS::Lambda::Function Tue Apr 04 2023 13:18:46 GMT-0700 (Pacific Daylight Time) 
+CREATE_IN_PROGRESS UpdateRolesWithIDPFunctionOutputs Custom::LambdaCallout Tue Apr 04 2023 13:18:47 GMT-0700 (Pacific Daylight Time) 
+⠇ Updating resources in the cloud. This may take a few minutes...
+CREATE_IN_PROGRESS                  UpdateRolesWithIDPFunctionOutputs Custom::LambdaCallout      Tue Apr 04 2023 13:18:50 GMT-0700 (Pacific Daylight Time) Resource creation Initiated
+CREATE_COMPLETE                     UpdateRolesWithIDPFunctionOutputs Custom::LambdaCallout      Tue Apr 04 2023 13:18:51 GMT-0700 (Pacific Daylight Time)                            
+UPDATE_COMPLETE_CLEANUP_IN_PROGRESS amplify-test-sbxa-125617          AWS::CloudFormation::Stack Tue Apr 04 2023 13:18:53 GMT-0700 (Pacific Daylight Time)                            
+⠋ Uploading files...⠋ Uploading files...⠋ Uploading files...⠋ Uploading files...✔ All resources are updated in the cloud
+Air:test david$ 
+
