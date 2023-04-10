@@ -49,14 +49,9 @@ const listUsers = async (event) => {
   console.log('Access Key Id', creds.accessKeyId);
   console.log('Secret Access Key', creds.secretAccessKey);
 
-/* keys for amplify-cli IAM user
-aws_access_key_id=AKIASKHWCUEDK632OUUU
-aws_secret_access_key=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
-*/
-
   const usercreds = {
-    accessKeyId: "AKIASKHWCUEDK632OUUU",
-    secretAccessKey: "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"
+    accessKeyId: creds.accessKeyId,
+    secretAccessKey: creds.secretAccessKey
   };
 
   //const client = createClientForDefaultRegion(CognitoIdentityProviderClient);

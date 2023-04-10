@@ -23,6 +23,11 @@ function App() {
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState('');
 
+  // Cognito specific data
+  const [cognitousers, setCognitoUsers] = useState(null);
+  const [cognitogroups, setCognitoGroups] = useState(null);
+  const [cognitouserdetails, setCognitoUserDetails] = useState(null);
+
   // add authactioncount as the 2nd arg to useEffect() to create
   // a dependency.  whenever authactioncount changes, useEffect()
   // will be triggered to run and cause the page to be re-rendered
@@ -172,10 +177,9 @@ function App() {
     });
   }
 
-  async function getUsers() {
+  async function getCognitoUsers() {
     // attempt using an Admin Query to get users
     const sess = await Auth.currentSession();
-    console.log('sess.accessToken', sess.accessToken);
 
     const myinit = {
       headers: {
@@ -185,6 +189,40 @@ function App() {
     }
     const result = await API.get("AdminQueries", "/listUsers", myinit);
     console.log('listUsers result', result);
+    setCognitoUsers(result);
+  }
+
+  async function getCognitoGroups() {
+    const sess = await Auth.currentSession();
+
+    const myinit = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: sess.accessToken.jwtToken
+      }
+    }
+
+    const result = await API.get("AdminQueries", "/listGroups", myinit);
+    console.log('listGroups result', result);
+    setCognitoGroups(result);
+  }
+
+  async function getCognitoUser() {
+    const sess = await Auth.currentSession();
+
+    const myinit = {
+      body: {
+        'username': 'david'
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: sess.accessToken.jwtToken
+      }
+    }
+
+    const result = await API.get("AdminQueries", "/getUser", myinit);
+    console.log('getUser result', result);
+    setCognitoUserDetails(result);
   }
 
   //if (!list)
@@ -200,10 +238,18 @@ function App() {
 
   console.log('this is start of test');
 
+  // aws-sdk related call; check listUsers.js for detailed code
   //const userlist = listUsers('us-east-1_wOVNZywK2');
   //console.log('userlist', userlist);
 
-  getUsers();
+  if (!cognitousers)
+    getCognitoUsers();
+
+  if (!cognitogroups)
+    getCognitoGroups();
+
+  if (!cognitouserdetails)
+    getCognitoUser();
 
 
   return (
