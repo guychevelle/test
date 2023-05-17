@@ -32,7 +32,7 @@
       "function": {
         "AdminQueriesb70b13a7": {
           "deploymentBucketName": "amplify-test-sbxa-125617-deployment",
-          "s3Key": "amplify-builds/AdminQueriesb70b13a7-4f6531516b48584b4c64-build.zip"
+          "s3Key": "amplify-builds/AdminQueriesb70b13a7-72366c6144306337537a-build.zip"
         }
       }
     }

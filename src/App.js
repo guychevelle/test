@@ -24,9 +24,14 @@ function App() {
   const [message, setMessage] = useState('');
 
   // Cognito specific data
+  const [cogusersetup, setCogUserSetup] = useState(false);
   const [cognitousers, setCognitoUsers] = useState(null);
   const [cognitogroups, setCognitoGroups] = useState(null);
   const [cognitouserdetails, setCognitoUserDetails] = useState(null);
+  const [adminsgroupexists, setAdminsGroupExists] = useState(false);
+  const [usersgroupexists, setUsersGroupExists] = useState(false);
+  const [nextgroupname, setNextGroupName] = useState(null);
+  const [groupexists, setGroupExists] = useState(false);
 
   // add authactioncount as the 2nd arg to useEffect() to create
   // a dependency.  whenever authactioncount changes, useEffect()
@@ -38,6 +43,102 @@ function App() {
     setAuthListener();
     console.log('authactioncount=', authactioncount);
   }, [authactioncount]);
+
+  //  read cognito groups only after there is a change to the 
+  //  logged in user
+  useEffect(() => {
+    console.log('running getcognitogroups effect');
+
+    if (!user) {
+      console.log('no user logged in');
+      return;
+    }
+
+    async function getCognitoGroups() {
+      const sess = await Auth.currentSession();
+
+      const myinit = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: sess.accessToken.jwtToken
+        }
+      }
+
+      const result = await API.get("AdminQueries", "/listGroups", myinit)
+                     .then((data) => { setCognitoGroups(data.Groups);
+                                       console.log('getcoggroups effect data', data);
+                                     })
+                     .catch((err) => console.log('getcoggroups error', err));
+      }
+
+    getCognitoGroups();
+  }, [user]);
+
+  // check for needed groups only after cognito groups have been read
+  useEffect(() => {
+    if (!cognitogroups) {
+      console.log('no cognito groups yet');
+      return;
+    }
+
+    let groups = [];
+
+    //  check to see if 'testgroup_admins' and 'testgroup_users' exist
+    if (cognitogroups.find((groups) => groups.GroupName === 'testgroup_admins')) {
+      console.log('setupcognitouser', 'testgroup_admins exists');
+  } else {
+      groups.push('testgroup_admins');
+    }
+
+    if (cognitogroups.find((groups) => groups.GroupName === 'testgroup_users')) {
+      console.log('setupcognitouser', 'testgroup_users exists');
+    } else {
+      groups.push('testgroup_users');
+    }
+
+    console.log('setting needed groups', groups);
+    setNextGroupName(groups);
+    if (groups.length == 0)
+      setCogUserSetup(true);
+  }, [cognitogroups]);
+
+  useEffect(() => {
+    console.log('running addcognitogroups effect');
+
+    if (!nextgroupname || nextgroupname.length == 0) {
+      console.log('addcognitogroups effect, no nextgroupname');
+      return;
+    }
+
+    async function addCognitoGroup(groupname) {
+      console.log('starting addCognitoGroup', groupname);
+      const sess = await Auth.currentSession();
+
+      const myinit = {
+        body: {
+          'groupname': groupname
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: sess.accessToken.jwtToken
+        }
+      }
+
+      const result = await API.post("AdminQueries", "/createGroup", myinit)
+                     .then((data) => { if (nextgroupname.length <= 1)
+                                         setCogUserSetup(true);
+                                       else
+                                         setNextGroupName(nextgroupname.shift());
+                                     } )
+                     .catch((err) => console.log(('addcognitogroup error', err)));
+      //  on failure, 'result' value is undefined
+      //console.log('addcognitogroup result', result);
+    }
+
+    console.log('calling addcognitogroup', nextgroupname);
+    addCognitoGroup(nextgroupname[0]);
+  }, [nextgroupname]);
+
 
   function logOut () {
     Auth.signOut();
@@ -177,6 +278,11 @@ function App() {
     });
   }
 
+  function updateCognitoUsers(data) {
+    console.log('updatecognitousers data', data);
+    setCognitoUsers(data.Users);
+  }
+
   async function getCognitoUsers() {
     // attempt using an Admin Query to get users
     const sess = await Auth.currentSession();
@@ -187,31 +293,24 @@ function App() {
         Authorization: sess.accessToken.jwtToken
       }
     }
-    const result = await API.get("AdminQueries", "/listUsers", myinit);
-    console.log('listUsers result', result);
-    setCognitoUsers(result);
+    const result = await API.get("AdminQueries", "/listUsers", myinit)
+                   .then((data) => updateCognitoUsers(data))
+                   .catch((err) => console.log('getcogusers error', err));
   }
 
-  async function getCognitoGroups() {
-    const sess = await Auth.currentSession();
-
-    const myinit = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: sess.accessToken.jwtToken
-      }
-    }
-
-    const result = await API.get("AdminQueries", "/listGroups", myinit);
-    console.log('listGroups result', result);
-    setCognitoGroups(result);
+  function updateCognitoUser(data) {
+    console.log('updatecognitouser data', data);
+    setCognitoUserDetails(data);
   }
 
   async function getCognitoUser() {
+    // the result of this AdminQuery returns the exact same data for 
+    // a specific user as /listUsers returns as an array for all users
+    console.log('starting getCognitoUser details');
     const sess = await Auth.currentSession();
 
     const myinit = {
-      body: {
+      queryStringParameters: {
         'username': 'david'
       },
       headers: {
@@ -220,10 +319,30 @@ function App() {
       }
     }
 
-    const result = await API.get("AdminQueries", "/getUser", myinit);
-    console.log('getUser result', result);
-    setCognitoUserDetails(result);
+    const result = await API.get("AdminQueries", "/getUser", myinit)
+                   .then((data) => updateCognitoUser(data))
+                   .catch((err) => console.log('getcoguser error', err));
   }
+
+  function groupAdded(data) {
+    // on successful group creation, the 'data' value is just the message:
+    // 'Success creating group testgroup'
+    console.log('groupadded data', data);
+    // set cognitogroups data to null to force re-capture of groups
+    setCognitoGroups(null);
+    //setNewCognitoGroup(data);
+  }
+
+  function handleGroupAddError(error) {
+    //  on failure (due to group already existing, the 'err' value is just:
+    //  'Error: Request failed with status code 400'
+    //  even though cloudwatch logs for the backend function has message:
+    //  ERROR A group with the name already exists.
+    //  the same message also shows up in the back end function as an INFO
+    //  stack trace that includes the same error message
+    console.log('handlegroupadderror', error.response.data.message);
+  }
+
 
   //if (!list)
   //  getSteps();
@@ -231,8 +350,9 @@ function App() {
   //if (!processdata)
   //  getProcesses();
 
-  if (!code)
-    getCode();
+  //if (!code)
+    // getCode() generates a 403 (forbidden) error; used to work.
+  //  getCode();
   //else
   //  console.log('code', code);
 
@@ -242,14 +362,54 @@ function App() {
   //const userlist = listUsers('us-east-1_wOVNZywK2');
   //console.log('userlist', userlist);
 
-  if (!cognitousers)
-    getCognitoUsers();
+  //if (!cognitousers)
+  //  getCognitoUsers();
 
-  if (!cognitogroups)
-    getCognitoGroups();
+  //if (!cognitouserdetails)
+  //  getCognitoUser();
 
-  if (!cognitouserdetails)
-    getCognitoUser();
+  function setupCognitoUser() {
+    // make sure a user is logged in
+    if (!user) {
+      console.log('setupcognitouser', 'no user logged in');
+      return;
+    }
+
+    console.log('setupcognitouser', 'user ' + user.username + ' logged in');
+
+    if (!cognitogroups) {
+      console.log('no groups retrieved');
+      return;
+    }
+
+    console.log('setupcognitouser', 'read all groups', cognitogroups);
+
+    //  check to see if 'testgroup_admins' and 'testgroup_users' exist
+    if (cognitogroups.find((groups) => groups.GroupName === 'testgroup_admins')) {
+      console.log('setupcognitouser', 'testgroup_admins exists');
+  } else {
+      setNextGroupName('testgroup_admins');
+      return;
+    }
+
+    console.log('setupcongnitouser check for _users');
+
+    if (cognitogroups.find((groups) => groups.GroupName === 'testgroup_users')) {
+      console.log('setupcognitouser', 'testgroup_users exists');
+    } else {
+      console.log('setupcognitouser: set next group to _users');
+      setNextGroupName('testgroup_users');
+      return;
+    }
+
+    setCogUserSetup(true);
+  }
+
+  console.log('nextgroupname:', nextgroupname);
+
+  //if (!cogusersetup) {
+  //  setupCognitoUser();
+  //}
 
 
   return (
@@ -264,6 +424,13 @@ function App() {
           )}
         </Authenticator>
       </div>
+      <p />
+      <div>
+        {cogusersetup ? 'user setup complete'
+                      : 'awaiting user group setup'
+        }
+      </div>
+      <p />
       <div>
         <button onClick={logOut}>Log Out</button>
       </div>

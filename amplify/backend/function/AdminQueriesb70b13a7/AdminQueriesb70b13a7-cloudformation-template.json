@@ -163,6 +163,7 @@
             {
               "Effect": "Allow",
               "Action": [
+                "cognito-idp:createGroup",
                 "cognito-idp:ListUsersInGroup",
                 "cognito-idp:AdminUserGlobalSignOut",
                 "cognito-idp:AdminEnableUser",

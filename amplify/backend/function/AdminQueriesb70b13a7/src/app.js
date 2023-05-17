@@ -16,6 +16,7 @@ const bodyParser = require('body-parser');
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 
 const {
+  createGroup,
   addUserToGroup,
   removeUserFromGroup,
   confirmUserSignUp,
@@ -69,6 +70,29 @@ const checkGroup = function (req, res, next) {
 };
 
 app.all('*', checkGroup);
+
+/*  
+ *  Custom action to create a Cognito group
+*/
+
+app.post('/createGroup', async(req, res, next) => {
+  if (!req.body.groupname) {
+    const err = new Error('Groupname is required');
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  try {
+    const response = await createGroup(req.body.groupname);
+    res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/*
+ *  End of custom actions
+*/
 
 app.post('/addUserToGroup', async (req, res, next) => {
   if (!req.body.username || !req.body.groupname) {
